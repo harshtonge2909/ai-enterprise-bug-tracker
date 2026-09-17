@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h2>{{ bug.title }}</h2>
+
+    <p class="text-muted">
+        {{ bug.description }}
+    </p>
+
+    <hr>
+
+    <h4 class="mb-3">
+        Comments
+    </h4>
+
+    {% for comment in comments %}
+
+        <div class="card mb-2 p-3">
+
+            <strong>
+                {{ comment.author }}
+            </strong>
+
+            <p class="mb-0">
+                {{ comment.content }}
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+    <h4 class="mb-3">
+        Activity Timeline
+    </h4>
+
+    {% for activity in activities %}
+
+        <div class="alert alert-light border">
+
+            <strong>
+
+                {{ activity.user }}
+
+            </strong>
+
+            →
+
+            {{ activity.action }}
+
+        </div>
+
+    {% endfor %}
+
+    <hr>
+
+    <hr>
+
+    <form method="POST">
+
+        <div class="mb-3">
+
+            <textarea class="form-control"
+                      name="content"
+                      rows="3"
+                      placeholder="Add comment..."
+                      required></textarea>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            Add Comment
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

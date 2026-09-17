@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card shadow text-center p-3">
+
+            <h5>Total Bugs</h5>
+
+            <h2 class="text-primary">
+
+                {{ total_bugs }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow text-center p-3">
+
+            <h5>Open</h5>
+
+            <h2 class="text-danger">
+
+                {{ open_bugs }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow text-center p-3">
+
+            <h5>In Progress</h5>
+
+            <h2 class="text-warning">
+
+                {{ in_progress_bugs }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow text-center p-3">
+
+            <h5>Resolved</h5>
+
+            <h2 class="text-success">
+
+                {{ resolved_bugs }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="card shadow p-4 mb-4">
+
+    <form method="GET"
+          action="/view_bugs">
+
+        <div class="row">
+
+            <!-- Search -->
+            <div class="col-md-4">
+
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Search bug title">
+
+            </div>
+
+            <!-- Priority Filter -->
+            <div class="col-md-3">
+
+                <select name="priority"
+                        class="form-select">
+
+                    <option>All</option>
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+
+                </select>
+
+            </div>
+
+            <!-- Status Filter -->
+            <div class="col-md-3">
+
+                <select name="status"
+                        class="form-select">
+
+                    <option>All</option>
+                    <option>Open</option>
+                    <option>In Progress</option>
+                    <option>Resolved</option>
+
+                </select>
+
+            </div>
+
+            <!-- Button -->
+            <div class="col-md-2">
+
+                <button type="submit"
+                        class="btn btn-dark w-100">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+<div class="card shadow p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2>
+            Bug Dashboard
+        </h2>
+
+        <a href="/create_bug"
+           class="btn btn-primary">
+
+           + New Bug
+
+        </a>
+
+    </div>
+
+    <table class="table table-hover align-middle">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Title</th>
+
+                <th>Priority</th>
+
+                <th>Status</th>
+
+                <th>Assigned To</th>
+
+                <th>Attachment</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for bug in bugs %}
+
+            <tr>
+
+                <td>{{ bug.id }}</td>
+
+                <td>
+
+                    <strong>{{ bug.title }}</strong>
+
+                    <br>
+
+                    <small class="text-muted">
+                        {{ bug.ai_summary }}
+                    </small>
+
+                </td>
+
+                <td>
+
+                    {% if bug.priority == "High" %}
+
+                        <span class="badge bg-danger">
+                            High
+                        </span>
+
+                    {% elif bug.priority == "Medium" %}
+
+                        <span class="badge bg-warning text-dark">
+                            Medium
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-success">
+                            Low
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if bug.status == "Open" %}
+
+                        <span class="badge bg-primary">
+                            Open
+                        </span>
+
+                    {% elif bug.status == "In Progress" %}
+
+                        <span class="badge bg-warning text-dark">
+                            In Progress
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-success">
+                            Resolved
+                        </span>
+
+                    {% endif %}
+
+                </td>
+                <td>
+
+                    {% if bug.assigned_to %}
+
+                        <span class="badge bg-info text-dark">
+
+                            {{ bug.assigned_to }}
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="text-muted">
+
+                            Unassigned
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if bug.file_name %}
+
+                        <a href="/static/uploads/{{ bug.file_name }}"
+                        target="_blank"
+                        class="btn btn-secondary btn-sm">
+
+                        View File
+
+                        </a>
+
+                    {% else %}
+
+                        <span class="text-muted">
+
+                            No File
+
+                        </span>
+
+                    {% endif %}
+
+                </td>
+                <td>
+                    <a href="/bug/{{ bug.id }}"
+                        class="btn btn-info btn-sm">
+
+                        Details
+
+                    </a>
+                    <a href="/update_bug/{{ bug.id }}"
+                       class="btn btn-warning btn-sm">
+
+                       Update
+
+                    </a>
+
+                    <a href="/delete_bug/{{ bug.id }}"
+                       class="btn btn-danger btn-sm">
+
+                       Delete
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

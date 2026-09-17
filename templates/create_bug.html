@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-7">
+
+        <div class="card shadow p-4">
+
+            <h2 class="text-center mb-4">
+                Report a Bug
+            </h2>
+
+            <form method="POST"
+                enctype="multipart/form-data">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Bug Title
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           name="title"
+                           required>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Description
+                    </label>
+
+                    <textarea class="form-control"
+                              name="description"
+                              rows="5"
+                              required></textarea>
+
+                </div>
+
+                
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Upload Screenshot / Log
+                    </label>
+
+                    <input type="file"
+                        class="form-control"
+                        name="bug_file">
+
+                </div>
+                <button type="submit"
+                        class="btn btn-danger w-100">
+
+                    Submit Bug
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Bug Tracker</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/" data-spa>Bug Tracker</a>
+    <div>
+      <a href="/" class="btn btn-outline-light me-2" data-spa>Home</a>
+      <a href="/view_bugs" class="btn btn-outline-light me-2" data-spa>Dashboard</a>
+      <a href="/create_bug" class="btn btn-outline-light me-2" data-spa>Create Bug</a>
+      <a href="/login" class="btn btn-outline-light me-2" data-spa>Login</a>
+      <a href="/register" class="btn btn-outline-light me-2" data-spa>Register</a>
+      <a href="/logout" class="btn btn-danger" data-spa>Logout</a>
+    </div>
+  </div>
+</nav>
+
+    <!-- Main Container -->
+    <div class="container mt-4">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </div>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const contentWrapper = document.querySelector(".container.mt-4");
+
+  function extractContent(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    return {
+      content: doc.querySelector(".container.mt-4"),
+      title: doc.querySelector("title")?.textContent || document.title
+    };
+  }
+
+  async function loadPage(url, addHistory = true) {
+    try {
+      const response = await fetch(url, { method: "GET" });
+      if (!response.ok) throw new Error("Page load failed");
+      const html = await response.text();
+      const parsed = extractContent(html);
+      if (parsed.content) {
+        contentWrapper.innerHTML = parsed.content.innerHTML;
+        document.title = parsed.title;
+        if (addHistory) history.pushState({ url }, "", url);
+      } else {
+        window.location.href = url;
+      }
+    } catch (err) {
+      console.error(err);
+      window.location.href = url;
+    }
+  }
+
+  document.body.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-spa]");
+    if (!link) return;
+    const url = link.getAttribute("href");
+    if (!url || url.startsWith("http")) return;
+    event.preventDefault();
+    loadPage(url);
+  });
+
+  window.addEventListener("popstate", (event) => {
+    if (event.state?.url) loadPage(event.state.url, false);
+  });
+});
+</script>
+</body>
+</html>
